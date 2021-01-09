@@ -5,6 +5,7 @@ class AppConstants {
 
     companion object{
 
+        val MOVIE_PLAYBACKID: String = "playback"
         val MOVIE_ID: String = "movieId"
         val TOKENBEARER: String = "Token"
         val PREF_FILE_NAME = "Movies"

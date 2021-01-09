@@ -11,6 +11,8 @@ import com.example.tentwentymovies.network.MoviesManager
 import com.example.tentwentymovies.response.MovieResponse
 import com.example.tentwentymovies.response.moviedetail.Genre
 import com.example.tentwentymovies.response.moviedetail.MovieDetailResponse
+import com.example.tentwentymovies.response.video.MovieVideoResponse
+import com.example.tentwentymovies.utils.Utilities
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -19,6 +21,7 @@ public class MovieListingViewModel(
 ) : ViewModel() {
 
     val upcomingMovies: MutableLiveData<List<Movies>> = MutableLiveData()
+    val video: MutableLiveData<String> = MutableLiveData()
     val movieDetail: MutableLiveData<MovieDetail> = MutableLiveData()
 
 
@@ -36,6 +39,22 @@ public class MovieListingViewModel(
     fun getMovieDetail(movieId: String) = viewModelScope.launch {
         val response = moviesManager.getMovieDetail(movieId)
         movieDetail.postValue(processMovieDetail(response))
+    }
+
+    fun getMovieVideoDetail(movieId: String) = viewModelScope.launch {
+        val response = moviesManager.getMovieVideoDetail(movieId)
+        video.postValue(processVideoDetails(response))
+    }
+
+    private fun processVideoDetails(response: Response<MovieVideoResponse>): String {
+        if (response.isSuccessful) {
+            response.body()?.let { result ->
+                 result.results.forEach{
+                     return it.key
+                 }
+            }
+        }
+        return ""
     }
 
     private fun processMovieDetail(response: Response<MovieDetailResponse>): MovieDetail {
@@ -70,8 +89,13 @@ public class MovieListingViewModel(
         moviesManager.insert(movieList)
     }
 
-    fun getAllMovies() =
-       moviesManager.getAllMovies()
+    fun getAllMovies(): LiveData<List<MoviesTable>> {
+        if (!moviesManager.networkHelper.hasInternet()!!){
+          return  moviesManager.getAllMovies()
+        }
+        return MutableLiveData()
+    }
+
 
     private fun processUpcomingMovies(response: Response<MovieResponse>): List<Movies> {
         val movieList = mutableListOf<Movies>()
@@ -93,25 +117,12 @@ public class MovieListingViewModel(
         return movieList
     }
 
-    private fun processUpcomingMovies(allMovies : LiveData<List<MoviesTable>>): List<Movies> {
-        val movieList = mutableListOf<Movies>()
-        allMovies?.let {
-            for (item in allMovies.value!!) {
-                movieList.add(Movies(
-                    item.id,
-                    item.title,
-                    item.image,
-                    item.release_date,
-                    item.adult,
-                    item.video
-                ))
-            }
-        }
-        return movieList
-    }
+
 
     fun movieDetail(movieId: String) {
-        getMovieDetail(movieId)
+        if (moviesManager.networkHelper.hasInternet()!!) {
+            getMovieDetail(movieId)
+        }
     }
 
 }

@@ -11,9 +11,10 @@ import com.example.tentwentymovies.R
 import com.example.tentwentymovies.adapter.MoviesAdapter
 import com.example.tentwentymovies.model.Movies
 import com.example.tentwentymovies.utils.AppConstants
+import com.example.tentwentymovies.utils.Utilities
 import kotlinx.android.synthetic.main.fragment_upcoming_movies.*
 
-class UpcomingMoviesFragment: Fragment(R.layout.fragment_upcoming_movies),
+class UpcomingMoviesFragment : Fragment(R.layout.fragment_upcoming_movies),
     MoviesAdapter.MovieListener {
 
     lateinit var viewModel: MovieListingViewModel
@@ -31,7 +32,7 @@ class UpcomingMoviesFragment: Fragment(R.layout.fragment_upcoming_movies),
                 putSerializable(AppConstants.MOVIE_ID, it.id)
             }
             findNavController().navigate(
-                R.id.action_upcomingMoviesFragment_to_movieDetailFragment,bundle
+                R.id.action_upcomingMoviesFragment_to_movieDetailFragment, bundle
             )
         }
 
@@ -39,8 +40,7 @@ class UpcomingMoviesFragment: Fragment(R.layout.fragment_upcoming_movies),
             moviesAdapter.differ.submitList(it)
         })
 
-        viewModel.getAllMovies().observe(viewLifecycleOwner, Observer {
-                allTables ->
+        viewModel.getAllMovies().observe(viewLifecycleOwner, Observer { allTables ->
             val allMovies = mutableListOf<Movies>()
             for (table in allTables) {
                 allMovies.add(
@@ -57,11 +57,14 @@ class UpcomingMoviesFragment: Fragment(R.layout.fragment_upcoming_movies),
             moviesAdapter.differ.submitList(allMovies)
         })
 
+
     }
 
     override fun onBookClicked(title: String) {
-        Toast.makeText(getActivity(), "$title Booked",
-            Toast.LENGTH_SHORT).show();
+        Toast.makeText(
+            getActivity(), "$title Booked",
+            Toast.LENGTH_SHORT
+        ).show();
     }
 
     private fun setupRecyclerView() {

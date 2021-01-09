@@ -11,6 +11,7 @@ import com.example.tentwentymovies.database.tables.MoviesTable
 import com.example.tentwentymovies.model.Movies
 import com.example.tentwentymovies.response.MovieResponse
 import com.example.tentwentymovies.response.moviedetail.MovieDetailResponse
+import com.example.tentwentymovies.response.video.MovieVideoResponse
 import com.example.tentwentymovies.utils.MoviesApiInteraction
 import com.example.tentwentymovies.utils.PreferencesHelper
 import retrofit2.Response
@@ -36,6 +37,10 @@ class MoviesManager(
 
     override suspend fun getMovieDetail(movieId: String): Response<MovieDetailResponse> {
         return moviesApiInteraction.getMovieDetail(movieId)
+    }
+
+    override suspend fun getMovieVideoDetail(id: String): Response<MovieVideoResponse> {
+        return moviesApiInteraction.getMovieVideoDetail(id)
     }
 
     suspend fun insert(movieList: MutableList<Movies>) {
