@@ -1,8 +1,10 @@
 package com.example.tentwentymovies.ui.movielisting
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tentwentymovies.database.tables.MoviesTable
 import com.example.tentwentymovies.model.MovieDetail
 import com.example.tentwentymovies.model.Movies
 import com.example.tentwentymovies.network.MoviesManager
@@ -11,7 +13,6 @@ import com.example.tentwentymovies.response.moviedetail.Genre
 import com.example.tentwentymovies.response.moviedetail.MovieDetailResponse
 import kotlinx.coroutines.launch
 import retrofit2.Response
-import java.lang.StringBuilder
 
 public class MovieListingViewModel(
     val moviesManager: MoviesManager
@@ -22,7 +23,9 @@ public class MovieListingViewModel(
 
 
     init {
-        getUpcomingMovies()
+        if (moviesManager.networkHelper.hasInternet()!!) {
+            getUpcomingMovies()
+        }
     }
 
     fun getUpcomingMovies() = viewModelScope.launch {
@@ -56,7 +59,7 @@ public class MovieListingViewModel(
         val string = StringBuilder()
         for (i in genres.indices) {
             string.append(genres[i].name)
-            if (i < (genres.size-1)){
+            if (i < (genres.size - 1)) {
                 string.append(",")
             }
         }
@@ -67,6 +70,8 @@ public class MovieListingViewModel(
         moviesManager.insert(movieList)
     }
 
+    fun getAllMovies() =
+       moviesManager.getAllMovies()
 
     private fun processUpcomingMovies(response: Response<MovieResponse>): List<Movies> {
         val movieList = mutableListOf<Movies>()
@@ -85,6 +90,23 @@ public class MovieListingViewModel(
             }
         }
         saveMovie(movieList)
+        return movieList
+    }
+
+    private fun processUpcomingMovies(allMovies : LiveData<List<MoviesTable>>): List<Movies> {
+        val movieList = mutableListOf<Movies>()
+        allMovies?.let {
+            for (item in allMovies.value!!) {
+                movieList.add(Movies(
+                    item.id,
+                    item.title,
+                    item.image,
+                    item.release_date,
+                    item.adult,
+                    item.video
+                ))
+            }
+        }
         return movieList
     }
 

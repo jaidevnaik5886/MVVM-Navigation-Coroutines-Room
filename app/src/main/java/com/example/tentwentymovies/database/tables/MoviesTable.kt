@@ -2,6 +2,7 @@ package com.example.tentwentymovies.database.tables
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity(
     tableName = "MoviesTable"
@@ -14,4 +15,4 @@ data class MoviesTable(
     var release_date: String = "",
     var adult: Boolean = false,
     var video: Boolean = false
-)
+): Serializable

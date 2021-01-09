@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tentwentymovies.R
 import com.example.tentwentymovies.adapter.MoviesAdapter
+import com.example.tentwentymovies.model.Movies
 import com.example.tentwentymovies.utils.AppConstants
 import kotlinx.android.synthetic.main.fragment_upcoming_movies.*
 
@@ -37,6 +38,25 @@ class UpcomingMoviesFragment: Fragment(R.layout.fragment_upcoming_movies),
         viewModel.upcomingMovies.observe(viewLifecycleOwner, Observer {
             moviesAdapter.differ.submitList(it)
         })
+
+        viewModel.getAllMovies().observe(viewLifecycleOwner, Observer {
+                allTables ->
+            val allMovies = mutableListOf<Movies>()
+            for (table in allTables) {
+                allMovies.add(
+                    Movies(
+                        table.id,
+                        table.title,
+                        table.image,
+                        table.release_date,
+                        table.adult,
+                        table.video
+                    )
+                )
+            }
+            moviesAdapter.differ.submitList(allMovies)
+        })
+
     }
 
     override fun onBookClicked(title: String) {
