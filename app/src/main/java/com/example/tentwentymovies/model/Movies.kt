@@ -1,9 +1,10 @@
 package com.example.tentwentymovies.model
 
 data class Movies(var id: String = "",
-                  var movieName: String = "",
-                  var icon: String = "",
-                  var rating: String = "",
-                  var address: String = "",
-                  var status: Boolean = false
+                  var title: String = "",
+                  var image: String = "",
+                  var release_date: String = "",
+                  var adult: Boolean = false,
+                  var video: Boolean = false
+
 )

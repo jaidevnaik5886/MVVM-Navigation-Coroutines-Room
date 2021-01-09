@@ -6,10 +6,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.tentwentymovies.R
 import com.example.tentwentymovies.model.Movies
+import com.example.tentwentymovies.utils.HttpConstants
+import kotlinx.android.synthetic.main.item_movies_list.view.*
 
-class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
+class MoviesAdapter(val movieListener: MovieListener) : RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
 
     inner class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
 
@@ -42,11 +45,20 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val movie = differ.currentList[position]
         holder.itemView.apply {
-//            Glide.with(this).load(movie.urlToImage).into(ivArticleImage)
-//            tvSource.text = movie.source.name
-//            tvTitle.text = movie.title
-//            tvDescription.text = movie.description
-//            tvPublishedAt.text = movie.publishedAt
+            Glide.with(this).load(HttpConstants.IMAGE_BASE_PATH+ movie.image).into(iv_movie_img)
+            txt_movie_name.text = movie.title
+            txt_movie_date.text = movie.release_date
+            if (movie.adult){
+                txt_movie_certificate.text = "Adult"
+            }
+            else{
+                txt_movie_certificate.text = "Non Adult"
+            }
+
+            btn_movie_book.setOnClickListener {
+                movieListener.onBookClicked(movie.title)
+            }
+
             setOnClickListener {
                 onItemClickListener?.let { it(movie) }
             }
@@ -57,5 +69,10 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
 
     fun setOnItemClickListener(listener: (Movies) -> Unit) {
         onItemClickListener = listener
+    }
+
+    interface MovieListener{
+
+        fun onBookClicked(title: String)
     }
 }

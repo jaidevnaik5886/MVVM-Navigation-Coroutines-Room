@@ -4,10 +4,6 @@ import com.example.tentwentymovies.utils.PreferencesHelper
 
 interface BaseView {
 
-    fun hideLoading()
-
-    fun showLoading()
-
     fun isNetworkAvailable(): Boolean
 
     fun getNoInternetMessage(): String?
@@ -15,8 +11,6 @@ interface BaseView {
     fun getNetworkHelper(): NetworkHelper
 
     fun getPreferences(): PreferencesHelper
-
-    fun runOnUi(runnable: Runnable?)
 
     fun showNoInternetMsg()
 

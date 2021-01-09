@@ -23,10 +23,10 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "SERVER_URL_ROOT", '"https://wwww.google.com/api/"'
+            buildConfigField "String", "SERVER_URL_ROOT", '"https://api.themoviedb.org/"'
         }
         release {
-            buildConfigField "String", "SERVER_URL_ROOT", '"https://wwww.google.com/api/"'
+            buildConfigField "String", "SERVER_URL_ROOT", '"https://api.themoviedb.org/"'
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -37,6 +37,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    dataBinding {
+        enabled = true
     }
 }
 
@@ -81,4 +84,8 @@ dependencies {
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     kapt 'com.github.bumptech.glide:compiler:4.11.0'
+
+    // Dependency injection
+    implementation "com.google.dagger:dagger:$rootProject.dagger2Version"
+    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
 }

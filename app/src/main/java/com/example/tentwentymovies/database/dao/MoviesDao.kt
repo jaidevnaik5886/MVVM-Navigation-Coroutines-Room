@@ -12,6 +12,6 @@ interface MoviesDao {
     suspend fun upsert(movies: MoviesTable)
 
     @Query("SELECT * FROM MoviesTable")
-    fun getAllMovies(): LiveData<MoviesTable>
+    fun getAllMovies(): LiveData<List<MoviesTable>>
 
 }
